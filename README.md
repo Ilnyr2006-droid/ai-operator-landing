@@ -18,11 +18,10 @@
 
 ![Mobile screenshot](docs/screenshots/landing-mobile-full.png)
 
-## Что заменить перед публикацией
+## Контакты
 
-- `https://t.me/your_username` на реальный Telegram.
-- `hello@example.com` на реальный email.
-- Цены, если оффер изменится.
+- Telegram: https://t.me/ilnurKasum
+- Email: ilnur1234567890111213141516@gmail.com
 
 ## Связанные заметки
 
