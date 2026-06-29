@@ -27,12 +27,12 @@ npm run dev
 
 ## Контакты
 
-- Telegram: https://t.me/ilnurKasum
+- Telegram-бот: задается через `TELEGRAM_BOT_USERNAME`
 - Email: ilnur1234567890111213141516@gmail.com
 
 ## AI-консультант
 
-На сайте есть чат-виджет AI-консультанта.
+На сайте есть чат-виджет AI-консультанта. Та же логика используется в Telegram-боте.
 
 Frontend отправляет сообщения на backend endpoint:
 
@@ -58,7 +58,44 @@ npm install
 npm run dev
 ```
 
-Если OpenAI API временно недоступен или ключ не задан, чат покажет fallback с прямой ссылкой на Telegram.
+Если OpenAI API временно недоступен или ключ не задан, чат покажет fallback со ссылкой на Telegram-бота.
+
+## Telegram-бот
+
+Сайт и Telegram-бот используют одну базу знаний AI-консультанта.
+
+Нужные переменные окружения:
+
+```env
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-4o-mini
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_BOT_USERNAME=...
+TELEGRAM_ADMIN_CHAT_ID=...
+TELEGRAM_WEBHOOK_SECRET=...
+PUBLIC_SITE_URL=...
+```
+
+Важно: реальные токены нельзя хранить в коде, README, frontend или GitHub. Они должны быть только в `.env` локально или в переменных окружения на хостинге.
+
+Как получить данные:
+
+1. Создать бота через `@BotFather`.
+2. Скопировать новый токен в `TELEGRAM_BOT_TOKEN`.
+3. Указать username бота без `@` в `TELEGRAM_BOT_USERNAME`.
+4. Узнать свой `chat_id` и указать его в `TELEGRAM_ADMIN_CHAT_ID`.
+5. Запустить проект:
+
+```bash
+npm install
+npm run dev
+```
+
+После запуска:
+
+- сайт доступен на `http://127.0.0.1:8029`;
+- Telegram-бот отвечает в Telegram;
+- заявки с сайта и из Telegram приходят владельцу в Telegram.
 
 ## SEO и GEO
 

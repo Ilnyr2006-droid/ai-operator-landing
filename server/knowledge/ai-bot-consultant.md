@@ -73,7 +73,7 @@ AI-бот не должен позиционироваться как полна
 
 ## Контакты
 
-Telegram: https://t.me/ilnurKasum
+Telegram: ссылка на Telegram-бота указана на сайте.
 
 Email: ilnur1234567890111213141516@gmail.com
 

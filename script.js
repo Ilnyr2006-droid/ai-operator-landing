@@ -1,11 +1,9 @@
 const header = document.querySelector(".site-header");
 const revealItems = document.querySelectorAll("[data-reveal]");
-const telegramUrl = "https://t.me/ilnurKasum";
+const fallbackTelegramUrl = "https://t.me/ilnurKasum";
 const emailAddress = "ilnur1234567890111213141516@gmail.com";
 const initialChatMessage =
   "Здравствуйте. Подскажу, подойдет ли AI-бот вашему бизнесу, расскажу про цены и помогу оставить заявку на бесплатный мини-аудит.";
-const unavailableMessage =
-  "Сейчас AI-консультант временно недоступен. Можете написать напрямую в Telegram: https://t.me/ilnurKasum";
 const quickQuestions = [
   { label: "Что умеет?", value: "Что делает AI-бот?" },
   { label: "Цена", value: "Сколько стоит?" },
@@ -24,6 +22,7 @@ let currentLead = {
   contact: "",
 };
 let lastLeadText = "";
+let telegramUrl = fallbackTelegramUrl;
 
 document.body.classList.add("can-reveal");
 
@@ -47,8 +46,34 @@ revealItems.forEach((item) => observer.observe(item));
 window.addEventListener("scroll", syncHeader, { passive: true });
 syncHeader();
 
-initChatWidget();
-initDebugPanel();
+bootstrap();
+
+async function bootstrap() {
+  const publicConfig = await loadPublicConfig();
+  telegramUrl = publicConfig.telegramBotUrl || fallbackTelegramUrl;
+  applyPublicConfig(publicConfig);
+  initChatWidget();
+  initDebugPanel();
+}
+
+async function loadPublicConfig() {
+  try {
+    const response = await fetch("/api/public-config");
+    if (!response.ok) throw new Error("Public config unavailable");
+    return await response.json();
+  } catch {
+    return {
+      telegramBotUrl: fallbackTelegramUrl,
+      email: emailAddress,
+    };
+  }
+}
+
+function applyPublicConfig(config) {
+  document.querySelectorAll("[data-telegram-bot-link]").forEach((link) => {
+    link.href = config.telegramBotUrl || fallbackTelegramUrl;
+  });
+}
 
 function initChatWidget() {
   const widget = document.createElement("section");
@@ -132,12 +157,13 @@ function initChatWidget() {
       const data = await sendChatMessage();
       typing.remove();
       currentLead = { ...currentLead, ...(data.lead || {}) };
-      const reply = data.reply || unavailableMessage;
+      const reply = data.reply || getUnavailableMessage();
       chatHistory.push({ role: "assistant", content: reply });
       renderMessage(messages, data.error ? "bot error" : "bot", reply);
 
       if (data.cta === "submit_lead" || data.lead_stage === "complete") {
         renderLeadSummary(messages, currentLead);
+        renderMessage(messages, "bot", getLeadDeliveryMessage(data.delivered_to));
       }
 
       if (data.intent === "unknown" || data.error) {
@@ -145,7 +171,7 @@ function initChatWidget() {
       }
     } catch {
       typing.remove();
-      renderMessage(messages, "bot error", unavailableMessage);
+      renderMessage(messages, "bot error", getUnavailableMessage());
       renderQuickActions(quickActions, handleQuickAction);
     } finally {
       setFormDisabled(form, false);
@@ -216,7 +242,7 @@ function renderLeadSummary(container, lead) {
     <pre></pre>
     <div>
       <button class="chat-copy" type="button">Скопировать</button>
-      <a href="${telegramUrl}" target="_blank" rel="noreferrer">Telegram</a>
+      <a class="chat-telegram" href="${telegramUrl}" target="_blank" rel="noreferrer">Открыть Telegram-бота</a>
       <a class="chat-email" href="${buildEmailLink(lastLeadText)}">Email</a>
     </div>
   `;
@@ -224,7 +250,7 @@ function renderLeadSummary(container, lead) {
   summary.querySelector(".chat-copy").addEventListener("click", async () => {
     await copyLeadText(lastLeadText);
   });
-  summary.querySelector(`a[href="${telegramUrl}"]`).addEventListener("click", async () => {
+  summary.querySelector(".chat-telegram").addEventListener("click", async () => {
     await copyLeadText(lastLeadText);
   });
   container.appendChild(summary);
@@ -249,6 +275,18 @@ function formatLead(lead) {
 
 function buildEmailLink(text) {
   return `mailto:${emailAddress}?subject=${encodeURIComponent("Мини-аудит AI-бот")}&body=${encodeURIComponent(text)}`;
+}
+
+function getUnavailableMessage() {
+  return `Сейчас AI-консультант временно недоступен. Можете открыть Telegram-бота и оставить заявку там: ${telegramUrl}`;
+}
+
+function getLeadDeliveryMessage(deliveredTo) {
+  if (deliveredTo === "telegram") {
+    return "Спасибо, заявка собрана. Я передал её Ильнуру в Telegram. Он посмотрит ваш бизнес и подготовит пример AI-бота.";
+  }
+
+  return "Заявка собрана, но автоматическая отправка может быть недоступна. Скопируйте заявку и отправьте её в Telegram-бота.";
 }
 
 async function copyLeadText(text) {
