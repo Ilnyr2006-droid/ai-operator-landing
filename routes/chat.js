@@ -94,10 +94,16 @@ async function askOpenAI({ apiKey, messages, lead, knowledge }) {
       temperature: 0.3,
       instructions,
       text: { format: { type: "json_object" } },
-      input: messages.map((message) => ({
-        role: message.role === "assistant" ? "assistant" : "user",
-        content: message.content,
-      })),
+      input: [
+        {
+          role: "user",
+          content: "Верни только валидный JSON по указанной схеме.",
+        },
+        ...messages.map((message) => ({
+          role: message.role === "assistant" ? "assistant" : "user",
+          content: message.content,
+        })),
+      ],
     }),
   });
 
