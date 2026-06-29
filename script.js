@@ -48,6 +48,7 @@ window.addEventListener("scroll", syncHeader, { passive: true });
 syncHeader();
 
 initChatWidget();
+initDebugPanel();
 
 function initChatWidget() {
   const widget = document.createElement("section");
@@ -251,4 +252,44 @@ function setFormDisabled(form, disabled) {
 
 function scrollChat(container) {
   container.scrollTop = container.scrollHeight;
+}
+
+function initDebugPanel() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("debug") !== "true") return;
+
+  const panel = document.createElement("aside");
+  panel.className = "debug-panel";
+  panel.innerHTML = `
+    <strong>Debug effects</strong>
+    <label>
+      Интенсивность свечения
+      <input type="range" min="0" max="1" step="0.01" value="0.42" data-var="--glow-intensity">
+    </label>
+    <label>
+      Прозрачность AI-слоя
+      <input type="range" min="0" max="1" step="0.01" value="0.88" data-var="--xray-opacity">
+    </label>
+    <label>
+      Размер мозаики
+      <input type="range" min="10" max="34" step="1" value="18" data-var="--mosaic-size" data-unit="px">
+    </label>
+    <label>
+      Цвет свечения
+      <input type="color" value="#2f6f5f" data-var="--glow-color">
+    </label>
+    <label>
+      Толщина границы
+      <input type="range" min="1" max="4" step="1" value="1" data-var="--glow-border" data-unit="px">
+    </label>
+  `;
+
+  panel.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", () => {
+      const unit = input.dataset.unit || "";
+      document.documentElement.style.setProperty(input.dataset.var, `${input.value}${unit}`);
+    });
+  });
+
+  document.body.appendChild(panel);
 }
