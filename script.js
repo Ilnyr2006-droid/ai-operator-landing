@@ -3,15 +3,15 @@ const revealItems = document.querySelectorAll("[data-reveal]");
 const telegramUrl = "https://t.me/ilnurKasum";
 const emailAddress = "ilnur1234567890111213141516@gmail.com";
 const initialChatMessage =
-  "Здравствуйте. Я помогу понять, подойдет ли AI-бот вашему бизнесу, расскажу про цены и могу принять заявку на бесплатный мини-аудит.";
+  "Здравствуйте. Подскажу, подойдет ли AI-бот вашему бизнесу, расскажу про цены и помогу оставить заявку на бесплатный мини-аудит.";
 const unavailableMessage =
   "Сейчас AI-консультант временно недоступен. Можете написать напрямую в Telegram: https://t.me/ilnurKasum";
 const quickQuestions = [
-  "Что делает AI-бот?",
-  "Сколько стоит?",
-  "Что входит?",
-  "Для кого подходит?",
-  "Оставить заявку",
+  { label: "Что умеет?", value: "Что делает AI-бот?" },
+  { label: "Цена", value: "Сколько стоит?" },
+  { label: "Что входит", value: "Что входит?" },
+  { label: "Кому подходит", value: "Для кого подходит?" },
+  { label: "Заявка", value: "Оставить заявку" },
 ];
 let chatHistory = [{ role: "assistant", content: initialChatMessage }];
 let currentLead = {
@@ -54,23 +54,30 @@ function initChatWidget() {
   const widget = document.createElement("section");
   widget.className = "chat-widget";
   widget.innerHTML = `
-    <button class="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
-      <span class="chat-toggle-full">AI-консультант</span>
-      <span class="chat-toggle-short">Чат</span>
+    <button class="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Открыть AI-консультанта">
+      <span class="chat-orb" aria-hidden="true">AI</span>
+      <span class="chat-toggle-text">
+        <strong>Спросить AI</strong>
+        <small>про цены и запуск</small>
+      </span>
     </button>
     <div class="chat-panel" id="chat-panel" aria-hidden="true">
       <div class="chat-header">
-        <div>
-          <strong>AI-консультант</strong>
-          <span>Отвечу на вопросы и помогу оставить заявку</span>
+        <div class="chat-title">
+          <span class="chat-header-orb" aria-hidden="true">AI</span>
+          <div>
+            <strong>AI-консультант</strong>
+            <span>Поможет с ценами, сроками и заявкой.</span>
+            <small><i></i> отвечает автоматически</small>
+          </div>
         </div>
         <button class="chat-close" type="button" aria-label="Закрыть чат">×</button>
       </div>
       <div class="chat-messages" aria-live="polite"></div>
       <div class="chat-quick-actions"></div>
       <form class="chat-input-row">
-        <input class="chat-input" type="text" placeholder="Напишите вопрос" autocomplete="off" />
-        <button class="chat-send" type="submit">Отправить</button>
+        <input class="chat-input" type="text" placeholder="Напишите вопрос..." autocomplete="off" />
+        <button class="chat-send" type="submit" aria-label="Отправить">↑</button>
       </form>
     </div>
   `;
@@ -166,7 +173,15 @@ async function sendChatMessage() {
 function renderMessage(container, type, text) {
   const message = document.createElement("div");
   message.className = `chat-message ${type}`;
-  message.textContent = text;
+  if (type === "bot" && container.querySelectorAll(".chat-message.bot").length === 0) {
+    const label = document.createElement("span");
+    label.className = "chat-message-label";
+    label.textContent = "AI-консультант";
+    message.appendChild(label);
+    message.appendChild(document.createTextNode(text));
+  } else {
+    message.textContent = text;
+  }
   container.appendChild(message);
   scrollChat(container);
   return message;
@@ -175,7 +190,7 @@ function renderMessage(container, type, text) {
 function renderTyping(container) {
   const typing = document.createElement("div");
   typing.className = "chat-typing";
-  typing.textContent = "Бот печатает...";
+  typing.innerHTML = '<span>AI пишет</span><i></i><i></i><i></i>';
   container.appendChild(typing);
   scrollChat(container);
   return typing;
@@ -186,8 +201,8 @@ function renderQuickActions(container, onClick) {
   quickQuestions.forEach((question) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = question;
-    button.addEventListener("click", () => onClick(question));
+    button.textContent = question.label;
+    button.addEventListener("click", () => onClick(question.value));
     container.appendChild(button);
   });
 }
@@ -197,12 +212,12 @@ function renderLeadSummary(container, lead) {
   const summary = document.createElement("div");
   summary.className = "chat-lead-summary";
   summary.innerHTML = `
-    <strong>Заявка на мини-аудит</strong>
+    <strong>Заявка собрана</strong>
     <pre></pre>
     <div>
-      <button class="chat-copy" type="button">Скопировать заявку</button>
-      <a href="${telegramUrl}" target="_blank" rel="noreferrer">Написать в Telegram</a>
-      <a class="chat-email" href="${buildEmailLink(lastLeadText)}">Отправить email</a>
+      <button class="chat-copy" type="button">Скопировать</button>
+      <a href="${telegramUrl}" target="_blank" rel="noreferrer">Telegram</a>
+      <a class="chat-email" href="${buildEmailLink(lastLeadText)}">Email</a>
     </div>
   `;
   summary.querySelector("pre").textContent = lastLeadText;
