@@ -8,6 +8,16 @@
 
 `index.html`
 
+## Скриншоты
+
+### Desktop
+
+![Desktop screenshot](docs/screenshots/landing-desktop-full.png)
+
+### Mobile
+
+![Mobile screenshot](docs/screenshots/landing-mobile-full.png)
+
 ## Что заменить перед публикацией
 
 - `https://t.me/your_username` на реальный Telegram.
