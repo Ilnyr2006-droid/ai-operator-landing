@@ -99,16 +99,11 @@ npm run dev
 
 ## SEO и GEO
 
-Перед публикацией нужно заменить `SITE_URL` на реальный домен в файлах:
+Публичный домен сайта:
 
-- `index.html`
-- `robots.txt`
-- `sitemap.xml`
-- `llms.txt`
+`https://aibizresheniya.ru`
 
-Сейчас временный домен указан как `https://example.com`.
-
-После публикации:
+После изменений:
 
 1. Проверить сайт в Google Search Console.
 2. Добавить сайт в Яндекс Вебмастер.

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO: заменить на реальный домен после публикации
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://aibizresheniya.ru/sitemap.xml
