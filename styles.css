@@ -22,10 +22,12 @@
 }
 
 html {
+  overflow-x: clip;
   scroll-behavior: smooth;
 }
 
 body {
+  overflow-x: clip;
   margin: 0;
   color: var(--ink);
   background:
@@ -138,6 +140,7 @@ a {
 }
 
 .hero-content {
+  min-width: 0;
   width: auto;
   margin: 0;
   padding-top: 0;
@@ -208,6 +211,7 @@ h3 {
 
 .hero-visual {
   position: relative;
+  min-width: 0;
   min-height: 520px;
 }
 
@@ -422,6 +426,7 @@ h3 {
 }
 
 .strip {
+  overflow: hidden;
   border-bottom: 1px solid var(--line);
   background: var(--paper-2);
 }
@@ -429,6 +434,7 @@ h3 {
 .strip-inner {
   display: flex;
   gap: 34px;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 18px clamp(20px, 4vw, 56px);
@@ -1158,10 +1164,19 @@ h3 {
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
+.chat-panel:not(.is-open) {
+  display: none;
+}
+
 .chat-panel.is-open {
+  display: grid;
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0) scale(1);
+}
+
+.chat-panel > * {
+  min-width: 0;
 }
 
 .chat-header {
@@ -1326,9 +1341,12 @@ h3 {
 }
 
 .chat-quick-actions {
+  min-width: 0;
+  width: 100%;
   display: flex;
   flex-wrap: nowrap;
   gap: 8px;
+  max-width: 100%;
   overflow-x: auto;
   padding: 0 18px 14px;
   scrollbar-width: none;
@@ -1555,9 +1573,11 @@ h3 {
   }
 
   .hero-shell {
-    width: calc(100% - 40px);
+    width: calc(100vw - 40px);
+    max-width: calc(100vw - 40px);
     grid-template-columns: 1fr;
     gap: 34px;
+    margin-inline: auto;
     padding-top: 0;
   }
 
@@ -1651,6 +1671,13 @@ h3 {
     font-size: 18px;
   }
 
+  .strip-inner {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    overflow: hidden;
+    white-space: normal;
+  }
+
   .hero-actions .button {
     width: 100%;
   }
@@ -1684,6 +1711,7 @@ h3 {
   .chat-panel {
     right: 0;
     bottom: 70px;
+    max-width: calc(100vw - 24px);
     width: calc(100vw - 24px);
     height: min(620px, calc(100svh - 120px));
     border-radius: 22px;

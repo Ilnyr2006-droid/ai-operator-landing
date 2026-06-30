@@ -39,7 +39,7 @@ export async function sendTelegramMessage(text) {
 export async function notifyAdminLead(lead, source, meta = {}) {
   const createdAt = lead?.created_at || new Date().toISOString();
   const lines = [
-    "Новая заявка на мини-аудит AI-бота",
+    "Новая заявка на мини-аудит AI-администратора",
     "",
     `Источник: ${source}`,
     "",

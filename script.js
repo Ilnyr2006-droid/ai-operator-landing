@@ -3,9 +3,9 @@ const revealItems = document.querySelectorAll("[data-reveal]");
 const fallbackTelegramUrl = "https://t.me/ilnurKasum";
 const emailAddress = "ilnur1234567890111213141516@gmail.com";
 const initialChatMessage =
-  "Здравствуйте. Подскажу, подойдет ли AI-бот вашему бизнесу, расскажу про цены и помогу оставить заявку на бесплатный мини-аудит.";
+  "Здравствуйте. Подскажу, подойдет ли AI-администратор вашему бизнесу, расскажу про цены и помогу оставить заявку на бесплатный мини-аудит.";
 const quickQuestions = [
-  { label: "Что умеет?", value: "Что делает AI-бот?" },
+  { label: "Что умеет?", value: "Что делает AI-администратор?" },
   { label: "Цена", value: "Сколько стоит?" },
   { label: "Что входит", value: "Что входит?" },
   { label: "Кому подходит", value: "Для кого подходит?" },
@@ -92,7 +92,7 @@ function initChatWidget() {
           <span class="chat-header-orb" aria-hidden="true">AI</span>
           <div>
             <strong>AI-консультант</strong>
-            <span>Поможет с ценами, сроками и заявкой.</span>
+            <span>Поможет с запуском AI-администратора.</span>
             <small><i></i> отвечает автоматически</small>
           </div>
         </div>
@@ -259,7 +259,7 @@ function renderLeadSummary(container, lead) {
 
 function formatLead(lead) {
   return [
-    "Заявка на мини-аудит AI-бота",
+    "Заявка на мини-аудит AI-администратора",
     "",
     `Бизнес: ${lead.business_name || "-"}`,
     `Город: ${lead.city || "-"}`,
@@ -269,12 +269,12 @@ function formatLead(lead) {
     `Проблема: ${lead.problem || "-"}`,
     `Контакт клиента: ${lead.contact || "-"}`,
     "",
-    "Хочу получить пример AI-бота для моего бизнеса.",
+    "Хочу получить пример AI-администратора для моего бизнеса.",
   ].join("\n");
 }
 
 function buildEmailLink(text) {
-  return `mailto:${emailAddress}?subject=${encodeURIComponent("Мини-аудит AI-бот")}&body=${encodeURIComponent(text)}`;
+  return `mailto:${emailAddress}?subject=${encodeURIComponent("Мини-аудит AI-администратора")}&body=${encodeURIComponent(text)}`;
 }
 
 function getUnavailableMessage() {
@@ -283,7 +283,7 @@ function getUnavailableMessage() {
 
 function getLeadDeliveryMessage(deliveredTo) {
   if (deliveredTo === "telegram") {
-    return "Спасибо, заявка собрана. Я передал её Ильнуру в Telegram. Он посмотрит ваш бизнес и подготовит пример AI-бота.";
+    return "Спасибо, заявка собрана. Я передал её Ильнуру в Telegram. Он посмотрит ваш бизнес и подготовит пример AI-администратора.";
   }
 
   return "Заявка собрана, но автоматическая отправка может быть недоступна. Скопируйте заявку и отправьте её в Telegram-бота.";
